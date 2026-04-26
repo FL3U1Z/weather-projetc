@@ -34,16 +34,22 @@ function App() {
 
       {/* Conteúdo principal */}
       <div className="flex-1 flex flex-col relative z-10">
-        {/* Header */}
-        <header className="pt-10 pb-6 px-4">
-          <div className="text-center mb-8">
-            <h1 className="font-display text-white/90 text-2xl font-bold tracking-widest uppercase">
-              WeatherApp
-            </h1>
-            <p className="text-white/30 font-body text-xs mt-1">
-              Clima em tempo real • OpenWeatherMap
-            </p>
-          </div>
+        {/* Header - Posição dinâmica */}
+        <header
+          className={`px-4 transition-all duration-500 ${
+            !data && !loading && !error
+              ? 'flex-1 flex flex-col items-center justify-center'
+              : 'pt-10 pb-6'
+          }`}
+        >
+            <div className="text-center mb-8">
+              <h1 className="font-display text-white/90 text-2xl font-bold tracking-widest uppercase">
+                Climate App
+              </h1>
+              <p className="text-white/30 font-body text-xs mt-1">
+                Clima em tempo real • OpenWeatherMap
+              </p>
+            </div>
 
           <SearchBar
             onSearch={fetchByCity}
@@ -53,21 +59,21 @@ function App() {
         </header>
 
         {/* Corpo */}
-        <main className="flex-1 flex items-start justify-center px-4 pb-10">
-          <div className="w-full max-w-lg">
-            {loading && <LoadingState />}
-            {!loading && error && <ErrorState message={error} />}
-            {!loading && !error && !data && <EmptyState />}
-            {!loading && !error && data && <WeatherCard data={data} />}
-          </div>
-        </main>
+          <main className="flex-1 flex items-start justify-center px-4 pb-10">
+            <div className="w-full max-w-lg">
+              {loading && <LoadingState />}
+              {!loading && error && <ErrorState message={error} />}
+              {!loading && !error && !data && <EmptyState />}
+              {!loading && !error && data && <WeatherCard data={data} />}
+            </div>
+          </main>
 
         {/* Footer */}
-        <footer className="pb-6 text-center">
-          <p className="text-white/20 font-body text-xs">
-            Dados fornecidos pela API OpenWeatherMap
-          </p>
-        </footer>
+          <footer className="pb-6 text-center">
+            <p className="text-white/20 font-body text-xs">
+              Dados fornecidos pela API OpenWeatherMap
+            </p>
+          </footer>
       </div>
     </div>
   )

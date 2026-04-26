@@ -43,7 +43,7 @@ export const WeatherCard = ({ data }: WeatherCardProps) => {
       {/* Temperatura principal */}
       <div className="text-center mb-8">
         <div className="text-8xl mb-2">{emoji}</div>
-        <div className="font-display font-extrabold text-white leading-none">
+        <div className="text-white leading-none">
           <span className="text-8xl">{Math.round(data.main.temp)}</span>
           <span className="text-4xl text-white/60">°C</span>
         </div>
