@@ -1,73 +1,99 @@
-# React + TypeScript + Vite
+# WeatherApp 🌤️
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+MVP de aplicação de clima em React + TypeScript + Tailwind CSS + Axios.
 
-Currently, two official plugins are available:
+## Funcionalidades
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- 🔍 Busca de clima por nome de cidade
+- 📍 Clima pela localização atual do usuário (GPS)
+- 🌡️ Temperatura, sensação térmica, mín/máx
+- 💧 Umidade, vento, pressão, visibilidade, cobertura de nuvens
+- 🌅 Horários de nascer e pôr do sol (ajustados para o fuso da cidade)
+- 🎨 Fundo dinâmico que muda conforme hora local e condição do tempo
+- ⚠️ Tratamento de erros (cidade não encontrada, sem conexão, sem permissão de GPS)
 
-## React Compiler
+## Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Tecnologia | Versão |
+|---|---|
+| React | 18 |
+| TypeScript | 5 |
+| Tailwind CSS | 3 |
+| Axios | 1.6 |
+| Vite | 5 |
 
-## Expanding the ESLint configuration
+## Como rodar
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 1. Instale as dependências
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 2. Configure a chave da API
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Crie um arquivo `.env` na raiz do projeto (copie o `.env.example`):
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cp .env.example .env
 ```
+
+Abra o `.env` e substitua `sua_chave_aqui` pela sua chave da OpenWeatherMap:
+
+```
+VITE_OPENWEATHER_API_KEY=sua_chave_aqui
+```
+
+> Obtenha sua chave gratuita em: https://openweathermap.org/api  
+> Plano gratuito cobre até 1.000 chamadas/dia — mais que suficiente para desenvolvimento.
+
+### 3. Rode o servidor de desenvolvimento
+
+```bash
+npm run dev
+```
+
+Acesse em `http://localhost:5173`
+
+### 4. Build para produção
+
+```bash
+npm run build
+npm run preview
+```
+
+## Estrutura do projeto
+
+```
+src/
+├── components/
+│   ├── SearchBar.tsx       # Campo de busca + botão de localização
+│   ├── WeatherCard.tsx     # Card principal com todos os dados
+│   ├── EmptyState.tsx      # Estado inicial (sem busca)
+│   ├── ErrorState.tsx      # Estado de erro
+│   └── LoadingState.tsx    # Estado de carregamento
+├── hooks/
+│   └── useWeather.ts       # Custom hook (toda a lógica de estado)
+├── services/
+│   └── weatherService.ts   # Chamadas Axios para a API
+├── types/
+│   └── weather.ts          # Tipos TypeScript da API
+├── utils/
+│   └── weatherUtils.ts     # Funções utilitárias (emojis, formatação, tema)
+├── App.tsx                 # Componente raiz
+├── main.tsx                # Entry point
+└── index.css               # Tailwind + utilitários globais
+```
+
+## API utilizada
+
+[OpenWeatherMap Current Weather API](https://openweathermap.org/current)
+
+Endpoint: `GET https://api.openweathermap.org/data/2.5/weather`
+
+Parâmetros usados:
+- `q` — nome da cidade
+- `lat` / `lon` — coordenadas geográficas
+- `appid` — chave da API
+- `units=metric` — temperatura em Celsius
+- `lang=pt_br` — descrições em português
