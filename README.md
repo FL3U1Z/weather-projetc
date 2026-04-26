@@ -126,3 +126,37 @@ Parâmetros usados:
 
 ### Assistentes de código
 - **Claude (Anthropic)** — utilizado como assistente durante o desenvolvimento para estruturação do projeto, revisão de código e resolução de erros
+
+## 🧪 Melhorias Futuras
+
+* 📱 Responsividade aprimorada (mobile first)
+* 🌙 Dark mode manual
+* 📊 Previsão para próximos dias
+* ⭐ Favoritar cidades
+* 🔔 Alertas climáticos
+
+---
+
+## 📚 Objetivo Acadêmico
+
+Este projeto foi desenvolvido como MVP para a pós-graduação, com foco em:
+
+* Consumo de APIs REST
+* Organização de projeto frontend
+* Boas práticas de versionamento (Conventional Commits)
+* Criação de interfaces modernas utilizando assitentes de código
+
+---
+
+## 👨‍💻 Autor
+
+Flávio Barbosa
+
+* GitHub: https://github.com/FL3U1Z
+* LinkedIn: https://www.linkedin.com/in/flávio-barbosa-ab26351a2/
+
+---
+
+## 📝 Licença
+
+Este projeto é para fins acadêmicos e educacionais.
