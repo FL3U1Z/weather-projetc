@@ -12,7 +12,7 @@ MVP de aplicação de clima em React + TypeScript + Tailwind CSS + Axios.
 - 🎨 Fundo dinâmico que muda conforme hora local e condição do tempo
 - ⚠️ Tratamento de erros (cidade não encontrada, sem conexão, sem permissão de GPS)
 
-## Stack
+## Tecnologias
 
 | Tecnologia | Versão |
 |---|---|
@@ -22,15 +22,64 @@ MVP de aplicação de clima em React + TypeScript + Tailwind CSS + Axios.
 | Axios | 1.6 |
 | Vite | 5 |
 
-## Como rodar
+# ⚙️ Configuração do ambiente
 
-### 1. Instale as dependências
+
+## 📋 Pré-requisitos
+
+| Requisito | Status | Detalhes |
+|-----------|--------|----------|
+| **Node.js** | Necessário | v16+ recomendado |
+| **npm/yarn** |  Necessário | Gerenciador de pacotes |
+| **Dependências** |  Necessário | React, TypeScript, Vite, Tailwind, Axios |
+| **Variáveis de Ambiente** | Necessário | VITE_OPENWEATHER_API_KEY |
+
+### Scripts Disponíveis
+
+```bash
+npm run dev      # Inicia servidor de desenvolvimento (Vite)
+npm run build    # Build otimizado para produção
+npm run preview  # Preview da build de produção
+```
+
+### 1. Clone o repositório
+
+```bash
+git clone git@github.com:FL3U1Z/weather-projetc.git
+cd weather-project
+```
+
+### 2. Instale as dependências
 
 ```bash
 npm install
 ```
 
-### 2. Configure a chave da API
+### 4. Configure as variáveis de ambiente
+
+```bash
+cp .env.example .env
+```
+
+Edite o arquivo `.env` com sua chave:
+
+```env
+OPENAI_API_KEY=sua_chave_aqui
+```
+
+> Nunca suba o arquivo `.env` para o repositório. Ele já está no `.gitignore` para segurança.
+
+---
+
+## Como Executar
+
+### 1. Instale as dependências (Se não foi instalada ainda)
+
+```bash
+npm install
+```
+
+### 2. Configure a chave da API - Passo fundamental para rodar o projeto
 
 Crie um arquivo `.env` na raiz do projeto (copie o `.env.example`):
 
@@ -62,29 +111,6 @@ npm run build
 npm run preview
 ```
 
-## Estrutura do projeto
-
-```
-src/
-├── components/
-│   ├── SearchBar.tsx       # Campo de busca + botão de localização
-│   ├── WeatherCard.tsx     # Card principal com todos os dados
-│   ├── EmptyState.tsx      # Estado inicial (sem busca)
-│   ├── ErrorState.tsx      # Estado de erro
-│   └── LoadingState.tsx    # Estado de carregamento
-├── hooks/
-│   └── useWeather.ts       # Custom hook (toda a lógica de estado)
-├── services/
-│   └── weatherService.ts   # Chamadas Axios para a API
-├── types/
-│   └── weather.ts          # Tipos TypeScript da API
-├── utils/
-│   └── weatherUtils.ts     # Funções utilitárias (emojis, formatação, tema)
-├── App.tsx                 # Componente raiz
-├── main.tsx                # Entry point
-└── index.css               # Tailwind + utilitários globais
-```
-
 ## API utilizada
 
 [OpenWeatherMap Current Weather API](https://openweathermap.org/current)
@@ -97,3 +123,6 @@ Parâmetros usados:
 - `appid` — chave da API
 - `units=metric` — temperatura em Celsius
 - `lang=pt_br` — descrições em português
+
+### Assistentes de código
+- **Claude (Anthropic)** — utilizado como assistente durante o desenvolvimento para estruturação do projeto, revisão de código e resolução de erros
