@@ -1,121 +1,75 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useWeather } from './hooks/useWeather'
+import { SearchBar } from './components/SearchBar'
+import { WeatherCard } from './components/WeatherCard'
+import { EmptyState } from './components/EmptyState'
+import { ErrorState } from './components/ErrorState'
+import { LoadingState } from './components/LoadingState'
+import { getBackgroundTheme } from './utils/weatherUtils'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { data, loading, error, fetchByCity, fetchByLocation } = useWeather()
+
+  const theme = data
+    ? getBackgroundTheme(data.weather[0].id, data.dt, data.timezone)
+    : { from: '#0d1b2a', via: '#1a2f4a', to: '#0f2033' }
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
+    <div
+      className="min-h-screen flex flex-col transition-all duration-1000"
+      style={{
+        background: `linear-gradient(135deg, ${theme.from} 0%, ${theme.via} 50%, ${theme.to} 100%)`,
+      }}
+    >
+      {/* Decorações de fundo */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div
+          className="absolute -top-40 -right-40 w-96 h-96 rounded-full opacity-10"
+          style={{ background: 'radial-gradient(circle, #60a5fa, transparent)' }}
+        />
+        <div
+          className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full opacity-10"
+          style={{ background: 'radial-gradient(circle, #818cf8, transparent)' }}
+        />
+      </div>
+
+      {/* Conteúdo principal */}
+      <div className="flex-1 flex flex-col relative z-10">
+        {/* Header */}
+        <header className="pt-10 pb-6 px-4">
+          <div className="text-center mb-8">
+            <h1 className="font-display text-white/90 text-2xl font-bold tracking-widest uppercase">
+              WeatherApp
+            </h1>
+            <p className="text-white/30 font-body text-xs mt-1">
+              Clima em tempo real • OpenWeatherMap
+            </p>
+          </div>
+
+          <SearchBar
+            onSearch={fetchByCity}
+            onLocationRequest={fetchByLocation}
+            loading={loading}
+          />
+        </header>
+
+        {/* Corpo */}
+        <main className="flex-1 flex items-start justify-center px-4 pb-10">
+          <div className="w-full max-w-lg">
+            {loading && <LoadingState />}
+            {!loading && error && <ErrorState message={error} />}
+            {!loading && !error && !data && <EmptyState />}
+            {!loading && !error && data && <WeatherCard data={data} />}
+          </div>
+        </main>
+
+        {/* Footer */}
+        <footer className="pb-6 text-center">
+          <p className="text-white/20 font-body text-xs">
+            Dados fornecidos pela API OpenWeatherMap
           </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+        </footer>
+      </div>
+    </div>
   )
 }
 
