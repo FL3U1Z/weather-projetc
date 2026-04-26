@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
-import { getWeatherByCity, getWeatherByCoords } from '../weatherService'
-import type { WeatherData, WeatherState } from '../../types/weather'
+import { getWeatherByCity, getWeatherByCoords } from '../services/weather.ts'
+import type { WeatherData, WeatherState } from '../types/weather'
 
 export const useWeather = () => {
   const [state, setState] = useState<WeatherState>({
