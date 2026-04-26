@@ -159,4 +159,4 @@ Flávio Barbosa
 
 ## 📝 Licença
 
-Este projeto é para fins acadêmicos e educacionais.
+Este projeto está sob a licença MIT.
