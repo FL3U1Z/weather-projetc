@@ -8,6 +8,8 @@ Uma aplicação web moderna e responsiva que fornece informações climáticas e
 
 ## ✨ Funcionalidades
 
+![Demonstração do App](assets/mvp_climate_ex.gif)
+
 - 🔍 **Busca por Cidade** - Digite o nome de qualquer cidade para obter dados climáticos
 - 📍 **Geolocalização** - Obtenha o clima da sua localização atual (GPS)
 - 🌡️ **Dados Detalhados** - Temperatura, sensação térmica, mín/máx
