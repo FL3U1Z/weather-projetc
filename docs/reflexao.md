@@ -19,38 +19,87 @@ Assim cada teste verifica os dois lados da fronteira: o que chegou à API e o qu
 | Casos aproveitados | 13 (CI-01..CI-13) | 16 (ER-01..ER-16) |
 | Defeitos que revelou | D1 | D1, D2, D3 |
 
-## Como cada ajuste mudou o resultado
+## Como cada tipo de prompt influenciou a qualidade e a diversidade
 
-**1. Contexto real (v1 → v2): eliminou a invenção.** Sem contexto, a LLM descreveu um app
-de clima "genérico": troca °C/°F, previsão de 5 dias, histórico, botão de tentar de novo,
-`role="alert"`. Foram 6 de 23 cenários inviáveis, e os exemplos de código usavam seletores
-que não existem. Depois de colar o contrato e as regras, nenhuma funcionalidade foi
-inventada nas duas v2.
+### Prompt 1: cenários de integração
 
-**2. Exigir a verificação da fronteira (v1 → v2): mudou o tipo de teste.** Na v1, só 3 de
-23 cenários olhavam o que chegou à API. O resto olhava apenas a tela. Com a definição
-explícita de teste de integração ("verifica os dois lados da fronteira"), todos os casos
-passaram a ter contagem de requisições e parâmetros. Foram essas verificações que pegaram
-defeitos como "retentativa automática" e "parâmetro `lang` sumiu" na verificação por mutação.
+**Qualidade.** A evolução foi de casos inviáveis para casos implementáveis sem interpretação:
 
-**3. Pedir perguntas em vez de suposições (v2 → v3): o ajuste de maior impacto.** Na v2,
-a LLM já sinalizava as incertezas com (*), mas preenchia o resultado mesmo assim. Por
-exemplo, "200 sem `weather` → mensagem genérica". Na v3, proibi isso e saíram **11
-perguntas** (6 no Prompt 1 e 5 no Prompt 2). Elas viraram 8 decisões explícitas
-(D-01..D-08) e 7 testes novos. **Todos os defeitos D2 e D3 foram encontrados por testes que
-só existiram por causa dessas perguntas.** As perguntas expuseram que as regras de negócio
-estavam incompletas, o que é útil mesmo antes de escrever qualquer teste.
+| Versão | Casos | Inviáveis (funcionalidade inventada) | Verificam a requisição | Perguntas |
+|---|---|---|---|---|
+| v1 | 23 | 6 | 3 | 0 |
+| v2 | 40 | 0 | 40 | 0 (2 suposições avisadas) |
+| v3 | 12 | 0 | 12 | 6 |
 
-**4. Classes de equivalência e limite de quantidade (v2 → v3): menos casos, mesma
-detecção.** A v2 de erros tinha 26 casos e a de cenários, 40. Na v3 caíram para 9 e 12.
-Os 401/429/500/503 viraram uma classe só, e a LLM justificou cada segundo representante,
-como o "404 na localização pode vazar a mensagem de cidade" (ER-06). A suíte final detecta
-8 de 8 mutantes, então o corte não custou cobertura.
+Sem contexto, a LLM descreveu um app de clima "genérico" (troca °C/°F, previsão de 5 dias,
+histórico, `role="alert"`), e os exemplos de código usavam seletores que não existem.
+Com contexto, todos os casos passaram a ter texto exato na tela e número exato de
+requisições, o que permitiu transformar cada linha da tabela num teste quase diretamente.
 
-**Diversidade:** o prompt de erros trouxe casos que eu não teria listado: o **200 com HTML
-de proxy** (portal de Wi-Fi), o `weather` vazio e a distinção entre 404 na cidade e 404 na
-localização. Já o prompt de cenários foi mais útil para **sequências** de ações, como cidade
-→ localização sem `q` residual e erro → sucesso limpando a mensagem.
+**Diversidade.** Este prompt explorou o eixo **ações do usuário**: entradas-limite (espaços
+nas pontas, acentos, caracteres reservados `& ? # = +`) e principalmente **sequências**,
+como cidade → localização sem `q` residual, erro → sucesso limpando a mensagem e cliques
+durante o carregamento. Esses casos não aparecem num prompt de erros, que pensa em uma
+requisição de cada vez. O ponto fraco foi a redundância: na v2, vários cenários exercitavam
+a mesma fronteira do mesmo jeito, e 11 deles eram modos de falha, que são escopo do outro
+prompt.
+
+**Efetividade.** Os 13 testes deste prompt revelaram o defeito D1 (CI-05 e CI-07) e, sozinhos,
+detectam **6 de 8** defeitos injetados na verificação por mutação.
+
+### Prompt 2: casos de erro
+
+**Qualidade.**
+
+| Versão | Saída | Resultado esperado definido | Suposições | Perguntas |
+|---|---|---|---|---|
+| v1 | ~50 itens em 9 categorias | nenhum | — | 0 |
+| v2 | 26 casos (matriz modo × caminho) | todos | 10, marcadas com (*) | 0 |
+| v3 | 8 classes, 9 casos | todos | 0 | 5 |
+
+A v1 foi um checklist, não um conjunto de testes: misturava acessibilidade, CORS, chave
+exposta no bundle e StrictMode com erros de integração, sem dizer o resultado de nenhum item.
+A v2 já era implementável, mas com explosão combinatória: 401, 429, 500 e 503 produzem o
+mesmo resultado e viravam casos separados.
+
+**Diversidade.** Este prompt explorou o eixo **comportamento da dependência**, e foi aqui
+que a LLM mais contribuiu com ideias que eu não teria listado: **200 com HTML de proxy**
+(portal de Wi-Fi), `weather` vazio, corpo de 5xx não-JSON e a distinção entre 404 na cidade
+e 404 na localização (ER-06), que pode vazar a mensagem errada. Curiosamente, a v1 "ruim" foi
+a mais diversa: várias dessas ideias saíram dela e foram reaproveitadas como lista fechada
+de modos de falha na v2.
+
+**Efetividade.** Os 16 testes deste prompt revelaram os três defeitos (D1, D2 e D3) e,
+sozinhos, detectam **8 de 8** defeitos injetados.
+
+### Comparando os dois
+
+Os prompts se complementam. O de cenários cobre como o usuário chega à fronteira, e o de
+erros cobre o que a fronteira devolve. Na detecção de defeitos, o de erros foi mais
+efetivo, porque os defeitos de integração deste app estavam no tratamento das respostas da
+API. O de cenários, porém, é o único que verifica sequências e a codificação da entrada,
+riscos reais que os mutantes escolhidos não exercitaram.
+
+## Ajustes de prompt necessários para obter resultados úteis
+
+| # | Ajuste | Versão | Problema que resolveu | Efeito observado |
+|---|---|---|---|---|
+| 1 | Colar o contrato real da API e as regras de negócio R1–R7 | v1 → v2 | Funcionalidades, mensagens e seletores inventados | Invenções caíram de 6/23 para 0 |
+| 2 | Definir o que conta como teste de integração ("verifica os dois lados da fronteira") | v1 → v2 | Casos que só olhavam a tela | Requisição verificada em 3/23 → 40/40 casos |
+| 3 | Exigir formato fixo: tabela com ID, ação, resposta simulada, nº de requisições, texto exato e regra; sem código | v1 → v2 | Resultados vagos ("erro genérico amigável") e código com seletores falsos | Cada linha virou um teste quase diretamente |
+| 4 | Dar uma lista fechada de modos de falha (Prompt 2) | v1 → v2 | Checklist genérico misturando níveis | Matriz modo × caminho só com falhas da dependência |
+| 5 | Separar o escopo dos prompts e limitar a 12 cenários ordenados por risco (Prompt 1) | v2 → v3 | 40 cenários, 11 deles invadindo o escopo de erros | 40 → 12, sem sobreposição |
+| 6 | Pedir classes de equivalência, com segundo representante só com motivo (Prompt 2) | v2 → v3 | Explosão combinatória (401/429/500/503 repetidos) | 26 → 9 casos, ainda 8/8 na mutação |
+| 7 | **Proibir suposições: comportamento indefinido vira pergunta** | v2 → v3 | Palpites preenchidos como resultado esperado | 11 perguntas → 8 decisões → 7 testes novos |
+
+O ajuste 7 teve o maior impacto. **Os defeitos D2 (sem timeout) e D3 (tela branca) só foram
+encontrados por testes que nasceram dessas perguntas.** Elas também expuseram que as regras
+de negócio estavam incompletas, o que tem valor mesmo antes de escrever qualquer teste.
+
+**Um efeito colateral:** o limite de 12 cenários (ajuste 5) fez a v3 descartar o caso de
+caracteres reservados na URL, que a v2 tinha. Recuperei esse caso manualmente (CI-13).
+Restringir a saída melhora o foco, mas pode cortar casos úteis, e a revisão humana entre
+versões continua necessária.
 
 ## Validação: os testes pegam defeitos de verdade?
 
