@@ -8,7 +8,8 @@ Uma aplicação web moderna e responsiva que fornece informações climáticas e
 
 ## ✨ Funcionalidades
 
-![Demonstração do App](assets/mvp_climate_ex.gif)
+<img src="assets/mvp_climate_ex.gif" width="50%" height="auto" alt="Demonstração do App">
+
 
 - 🔍 **Busca por Cidade** - Digite o nome de qualquer cidade para obter dados climáticos
 - 📍 **Geolocalização** - Obtenha o clima da sua localização atual (GPS)
@@ -118,6 +119,8 @@ npm run preview          # Preview da build de produção
 # Testes
 npm run test             # Executa testes em modo watch
 npm run test:ui          # Executa testes com interface visual
+npm run test:integracao  # Executa só os testes de integração
+npm run test:mutacao     # Injeta defeitos e verifica quais testes os detectam
 ```
 
 ## 🧪 Testes
@@ -152,6 +155,28 @@ Para visualizar os testes em modo UI:
 ```bash
 npm run test:ui
 ```
+
+### Testes de integração gerados com GenAI
+
+Além dos testes unitários, há **29 testes de integração** projetados com o apoio de uma LLM
+a partir de dois tipos de prompt: **cenários de integração** e **casos de erro na fronteira**.
+Neles, todo o código da aplicação roda de verdade (componentes → hook → service → axios), e
+só a API OpenWeatherMap é simulada na camada de rede com [MSW](https://mswjs.io/). Cada teste
+verifica as requisições que chegaram à API **e** o que o usuário vê.
+
+| Onde | O quê |
+|---|---|
+| [prompts/](prompts/) | Texto exato de cada versão dos prompts (v1 → v3), o que a LLM devolveu e por que mudei |
+| [prompts/saidas/](prompts/saidas/) | Respostas completas da LLM, sem edição |
+| [src/test/integracao/](src/test/integracao/) | Os testes automatizados (`cenarios.test.tsx`, `erros.test.tsx`) |
+| [docs/casos-gerados.md](docs/casos-gerados.md) | Catálogo de cada caso, origem, decisões e casos descartados |
+| [docs/reflexao.md](docs/reflexao.md) | Análise: o que cada ajuste de prompt mudou, defeitos encontrados, limitações |
+| [scripts/mutacao.mjs](scripts/mutacao.mjs) | Verificação por mutação ([resultado](docs/evidencias/mutacao.md)) |
+
+Os testes revelaram 3 defeitos reais no código, já corrigidos: o 404 nunca mostrava
+"Cidade não encontrada", não havia timeout e um 200 fora do contrato deixava a tela em
+branco. Na verificação por mutação, a suíte de integração detectou **8 de 8** defeitos
+injetados; os testes unitários detectaram 1.
 
 ## 🌐 API Utilizada
 

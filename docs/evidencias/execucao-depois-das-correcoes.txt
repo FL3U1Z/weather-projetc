@@ -1,0 +1,31 @@
+ ✓ erros.test.tsx > Integração UI ↔ OpenWeatherMap: casos de erro (Prompt 2) > busca por cidade > ER-01: 404 mostra "cidade não encontrada" (classe EQ-C1)
+ ✓ cenarios.test.tsx > Integração UI ↔ OpenWeatherMap: cenários (Prompt 1) > CI-01: busca por cidade remove espaços das pontas e mostra temperaturas arredondadas
+ ✓ cenarios.test.tsx > Integração UI ↔ OpenWeatherMap: cenários (Prompt 1) > CI-02: busca por localização envia lat/lon da geolocalização e nenhum q
+ ✓ erros.test.tsx > Integração UI ↔ OpenWeatherMap: casos de erro (Prompt 2) > busca por cidade > ER-02: 500 mostra a mensagem genérica, sem retentativa (classe EQ-C2)
+ ✓ cenarios.test.tsx > Integração UI ↔ OpenWeatherMap: cenários (Prompt 1) > CI-03: durante a requisição pendente mostra carregamento e bloqueia campo e botões
+ ✓ erros.test.tsx > Integração UI ↔ OpenWeatherMap: casos de erro (Prompt 2) > busca por cidade > ER-03: conexão derrubada mostra a mensagem genérica (EQ-C2, sem error.response)
+ ✓ erros.test.tsx > Integração UI ↔ OpenWeatherMap: casos de erro (Prompt 2) > busca por cidade > ER-04: 503 com corpo HTML mostra a mensagem genérica (EQ-C2, corpo não-JSON)
+ ✓ cenarios.test.tsx > Integração UI ↔ OpenWeatherMap: cenários (Prompt 1) > CI-04: duas buscas seguidas com sucesso mostram só a última cidade
+ ✓ erros.test.tsx > Integração UI ↔ OpenWeatherMap: casos de erro (Prompt 2) > busca por cidade > ER-08: resposta lenta com cliques nos botões desabilitados gera uma única requisição
+ ✓ erros.test.tsx > Integração UI ↔ OpenWeatherMap: casos de erro (Prompt 2) > busca por localização > ER-05: 500 mostra "erro ao buscar localização" (classe EQ-L1)
+ ✓ erros.test.tsx > Integração UI ↔ OpenWeatherMap: casos de erro (Prompt 2) > busca por localização > ER-06: 404 na localização não vaza a mensagem de cidade não encontrada
+ ✓ erros.test.tsx > Integração UI ↔ OpenWeatherMap: casos de erro (Prompt 2) > busca por localização > ER-07: conexão derrubada mostra "erro ao buscar localização"
+ ✓ erros.test.tsx > Integração UI ↔ OpenWeatherMap: casos de erro (Prompt 2) > busca por localização > ER-09: resposta lenta com cliques nos botões desabilitados gera uma única requisição
+ ✓ erros.test.tsx > Integração UI ↔ OpenWeatherMap: casos de erro (Prompt 2) > casos destravados pelas perguntas da LLM > ER-10: o cliente HTTP tem timeout configurado (D-05)
+ ✓ cenarios.test.tsx > Integração UI ↔ OpenWeatherMap: cenários (Prompt 1) > CI-05: erro 404 seguido de busca com sucesso limpa a mensagem de erro
+ ✓ erros.test.tsx > Integração UI ↔ OpenWeatherMap: casos de erro (Prompt 2) > casos destravados pelas perguntas da LLM > ER-11: resposta que nunca chega vira erro genérico na busca por cidade (D-05)
+ ✓ cenarios.test.tsx > Integração UI ↔ OpenWeatherMap: cenários (Prompt 1) > CI-06: busca por localização depois de busca por cidade não reaproveita o q
+ ✓ erros.test.tsx > Integração UI ↔ OpenWeatherMap: casos de erro (Prompt 2) > casos destravados pelas perguntas da LLM > ER-12: resposta que nunca chega vira erro de localização (D-05)
+ ✓ cenarios.test.tsx > Integração UI ↔ OpenWeatherMap: cenários (Prompt 1) > CI-07: erro na busca por cidade some quando a busca por localização dá certo
+ ✓ cenarios.test.tsx > Integração UI ↔ OpenWeatherMap: cenários (Prompt 1) > CI-08: campo vazio não gera requisição e a tela inicial permanece
+ ✓ erros.test.tsx > Integração UI ↔ OpenWeatherMap: casos de erro (Prompt 2) > casos destravados pelas perguntas da LLM > ER-13: 200 sem o array weather é tratado como falha, sem derrubar a tela (D-06)
+ ✓ erros.test.tsx > Integração UI ↔ OpenWeatherMap: casos de erro (Prompt 2) > casos destravados pelas perguntas da LLM > ER-14: 200 com weather vazio na localização é tratado como falha (D-06)
+ ✓ erros.test.tsx > Integração UI ↔ OpenWeatherMap: casos de erro (Prompt 2) > casos destravados pelas perguntas da LLM > ER-15: 200 com HTML de proxy no corpo é tratado como falha (D-07)
+ ✓ cenarios.test.tsx > Integração UI ↔ OpenWeatherMap: cenários (Prompt 1) > CI-09: campo só com espaços não gera requisição e mantém o card anterior
+ ✓ erros.test.tsx > Integração UI ↔ OpenWeatherMap: casos de erro (Prompt 2) > casos destravados pelas perguntas da LLM > ER-16: erro depois de um sucesso substitui o card pela mensagem (D-08)
+ ✓ cenarios.test.tsx > Integração UI ↔ OpenWeatherMap: cenários (Prompt 1) > CI-10: acentos e espaços internos chegam intactos no parâmetro q
+ ✓ cenarios.test.tsx > Integração UI ↔ OpenWeatherMap: cenários (Prompt 1) > CI-11: permissão de localização negada mostra a mensagem e não chama a API
+ ✓ cenarios.test.tsx > Integração UI ↔ OpenWeatherMap: cenários (Prompt 1) > CI-12: Enter no campo dispara exatamente uma busca
+ ✓ cenarios.test.tsx > Integração UI ↔ OpenWeatherMap: cenários (Prompt 1) > CI-13: caracteres reservados de URL não quebram nem criam parâmetros extras
+ Test Files  2 passed (2)
+      Tests  29 passed (29)

@@ -92,9 +92,12 @@ describe('weather service', () => {
     })
 
     it('deve funcionar com coordenadas negativas', async () => {
+      // O service rejeita respostas sem name/main/weather, então o mock segue o contrato.
       const mockData = {
         name: 'Buenos Aires',
         coord: { lat: -34.6037, lon: -58.3816 },
+        main: { temp: 18 },
+        weather: [{ id: 800 }],
       }
 
       const { api } = await import('../services/api')

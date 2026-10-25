@@ -8,6 +8,8 @@ if (!API_KEY) {
 
 export const api = axios.create({
   baseURL: 'https://api.openweathermap.org/data/2.5',
+  // Sem timeout, uma resposta que nunca chega deixa o app preso no carregamento.
+  timeout: 10_000,
   params: {
     appid: API_KEY,
     units: 'metric',
