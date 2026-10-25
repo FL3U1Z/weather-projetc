@@ -8,6 +8,8 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: './src/test/setup.ts',
+    // Chave falsa: nos testes a API é simulada e nenhuma requisição sai da máquina.
+    env: { VITE_OPENWEATHER_API_KEY: 'chave-de-teste' },
   },
   resolve: {
     alias: {
